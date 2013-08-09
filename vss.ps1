@@ -10,6 +10,15 @@ function isACheckedInFile($line){
       return ($line -match "Checked in.*" -and !($line -match ".* Version .*"))
 }
 
+function getFilename($output,$index){
+        $dir = ($output[$index..($index+3)] -join "") -replace "Checked in ",""
+        $dir = $dir -replace "Comment:.*",""
+        $file = $output[$index - 3] -replace "\*\*\*\*\*",""
+        $file = $file.trim()
+        Write-Host "File changed:${dir}/${file}"
+        return "${dir}/${file}"
+}
+
 [Environment]::SetEnvironmentVariable("SSUSER", "Guest", "Process")
 [Environment]::SetEnvironmentVariable("SSPWD","saucy","Process")
 [Environment]::SetEnvironmentVariable("SSDIR","\\EMSDEV01\EMS_SourceSafe","Process")
@@ -26,12 +35,7 @@ while(!($line -match ".* Version .*") -and $index -lt $output.length)
     $line = $output[$index]
     if(isACheckedInFile $line)
     {
-        $dir = ($output[$index..($index+3)] -join "") -replace "Checked in ",""
-        $dir = $dir -replace "Comment:.*",""
-        $file = $output[$index - 3] -replace "\*\*\*\*\*",""
-        $file = $file.trim()
-        $files += "${dir}/${file}"
-        Write-Host "File changed:${dir}/${file}"
+        $files += getFilename $output $index
     }
     $index++
 }
