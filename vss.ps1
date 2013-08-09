@@ -2,6 +2,10 @@
 #[Environment]::SetEnvironmentVariable("SSPWD","1234","Process")
 #[Environment]::SetEnvironmentVariable("SSDIR","\\VOSTRO_470_003\JenkinsTest","Process")
 
+[Environment]::SetEnvironmentVariable("SSUSER", "Guest", "Process")
+[Environment]::SetEnvironmentVariable("SSPWD","saucy","Process")
+[Environment]::SetEnvironmentVariable("SSDIR","\\EMSDEV01\EMS_SourceSafe","Process")
+
 function isAComment($ringfenced_file){
     return ($ringfenced_file -eq "" -or $ringfenced_file -match "^#.*")
 }
@@ -13,15 +17,11 @@ function isACheckedInFile($line){
 function getFilename($output,$index){
         $dir = ($output[$index..($index+3)] -join "") -replace "Checked in ",""
         $dir = $dir -replace "Comment:.*",""
-        $file = $output[$index - 3] -replace "\*\*\*\*\*",""
+        $file = $output[$index - 3] -replace "\*",""
         $file = $file.trim()
         Write-Host "File changed:${dir}/${file}"
         return "${dir}/${file}"
 }
-
-[Environment]::SetEnvironmentVariable("SSUSER", "Guest", "Process")
-[Environment]::SetEnvironmentVariable("SSPWD","saucy","Process")
-[Environment]::SetEnvironmentVariable("SSDIR","\\EMSDEV01\EMS_SourceSafe","Process")
 
 $output = ss history -#100
 $files = @()
