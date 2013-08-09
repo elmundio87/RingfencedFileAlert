@@ -1,10 +1,13 @@
-#[Environment]::SetEnvironmentVariable("SSUSER", "testuser", "Process")
-#[Environment]::SetEnvironmentVariable("SSPWD","1234","Process")
-#[Environment]::SetEnvironmentVariable("SSDIR","\\VOSTRO_470_003\JenkinsTest","Process")
+# declare the parameters #
+Param(
+    [string]$user="Guest",
+    [string]$password = "saucy",
+    [string]$repo = "\\EMSDEV01\EMS_SourceSafe"
+)
 
-[Environment]::SetEnvironmentVariable("SSUSER", "Guest", "Process")
-[Environment]::SetEnvironmentVariable("SSPWD","saucy","Process")
-[Environment]::SetEnvironmentVariable("SSDIR","\\EMSDEV01\EMS_SourceSafe","Process")
+[Environment]::SetEnvironmentVariable("SSUSER", $user, "Process")
+[Environment]::SetEnvironmentVariable("SSPWD", $password,"Process")
+[Environment]::SetEnvironmentVariable("SSDIR",$repo,"Process")
 
 function isAComment($ringfenced_file){
     return ($ringfenced_file -eq "" -or $ringfenced_file -match "^#.*")
