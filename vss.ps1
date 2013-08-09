@@ -6,8 +6,6 @@
 [Environment]::SetEnvironmentVariable("SSPWD","saucy","Process")
 [Environment]::SetEnvironmentVariable("SSDIR","\\EMSDEV01\EMS_SourceSafe","Process")
 
-$project = "StarChef.Net"
-
 $output = ss history -#100
 $files = @()
 $exitcode = 0
@@ -20,7 +18,7 @@ while(!($line -match ".* Version .*") -and $index -lt $output.length)
     $line = $output[$index]
     if($line -match "Checked in.*" -and !($line -match ".* Version .*"))
     {
-        $dir = ($output[$index..($index+3)] -join "") -replace "Checked in \$/${project}",""
+        $dir = ($output[$index..($index+3)] -join "") -replace "Checked in ",""
         $dir = $dir -replace "Comment:.*",""
         $file = $output[$index - 3] -replace "\*\*\*\*\*",""
         $file = $file.trim()
