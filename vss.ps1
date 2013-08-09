@@ -2,6 +2,10 @@
 #[Environment]::SetEnvironmentVariable("SSPWD","1234","Process")
 #[Environment]::SetEnvironmentVariable("SSDIR","\\VOSTRO_470_003\JenkinsTest","Process")
 
+function isAComment($ringfenced_file){
+    return ($ringfenced_file -eq "" -or $ringfenced_file -match "^#.*")
+}
+
 [Environment]::SetEnvironmentVariable("SSUSER", "Guest", "Process")
 [Environment]::SetEnvironmentVariable("SSPWD","saucy","Process")
 [Environment]::SetEnvironmentVariable("SSDIR","\\EMSDEV01\EMS_SourceSafe","Process")
@@ -31,7 +35,7 @@ while(!($line -match ".* Version .*") -and $index -lt $output.length)
 $ringfenced_files = (Get-Content "ringfenced_files")
 foreach ($ringfenced_file in $ringfenced_files) 
 { 
-    if($ringfenced_file -ne "" -and !($ringfenced_file -match "^#.*"))
+    if(!(isAComment $ringfenced_file))
     {
         foreach ($file in $files) 
         { 
