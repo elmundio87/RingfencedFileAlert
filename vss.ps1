@@ -6,6 +6,10 @@ function isAComment($ringfenced_file){
     return ($ringfenced_file -eq "" -or $ringfenced_file -match "^#.*")
 }
 
+function isACheckedInFile($line){
+      return ($line -match "Checked in.*" -and !($line -match ".* Version .*"))
+}
+
 [Environment]::SetEnvironmentVariable("SSUSER", "Guest", "Process")
 [Environment]::SetEnvironmentVariable("SSPWD","saucy","Process")
 [Environment]::SetEnvironmentVariable("SSDIR","\\EMSDEV01\EMS_SourceSafe","Process")
@@ -20,7 +24,7 @@ $index = 0
 while(!($line -match ".* Version .*") -and $index -lt $output.length)
 {
     $line = $output[$index]
-    if($line -match "Checked in.*" -and !($line -match ".* Version .*"))
+    if(isACheckedInFile $line)
     {
         $dir = ($output[$index..($index+3)] -join "") -replace "Checked in ",""
         $dir = $dir -replace "Comment:.*",""
